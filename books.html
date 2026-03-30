@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dmitry Potekhin - Book Collection">
+    <title>Books Collection - Dmitry Potekhin</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-brand">
+                    <h1>Dmitry Potekhin</h1>
+                    <p class="subtitle" data-lang-ru="Коллекция книг" data-lang-en="Book Collection">Коллекция книг</p>
+                </div>
+                <div class="nav-controls">
+                    <button id="theme-toggle" class="btn-icon" aria-label="Toggle theme">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button id="lang-toggle" class="btn-lang" aria-label="Toggle language">
+                        <span id="current-lang">EN</span>
+                    </button>
+                    <a href="index.html" class="btn-nav" data-lang-ru="👤 Резюме" data-lang-en="👤 Resume">👤 Resume</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Books Header -->
+        <section class="books-header">
+            <h2 data-lang-ru="📚 Моя библиотека" data-lang-en="📚 My Library">📚 Моя библиотека</h2>
+            <p class="books-count" data-lang-ru="Всего книг: <span id="total-books">424</span>" data-lang-en="Total books: <span id='total-books'>424</span>">Всего книг: <span id="total-books">424</span></p>
+        </section>
+
+        <!-- Search and Filter -->
+        <section class="books-controls">
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    placeholder="Поиск по названию или автору..." 
+                    data-placeholder-ru="Поиск по названию или автору..."
+                    data-placeholder-en="Search by title or author..."
+                >
+                <span class="search-icon">🔍</span>
+            </div>
+            
+            <div class="filter-section">
+                <label for="author-filter" data-lang-ru="Фильтр по автору:" data-lang-en="Filter by author:">Фильтр по автору:</label>
+                <select id="author-filter">
+                    <option value="all" data-lang-ru="Все авторы" data-lang-en="All authors">Все авторы</option>
+                    <!-- Authors will be populated by JavaScript -->
+                </select>
+            </div>
+
+            <div class="sort-section">
+                <label for="sort-select" data-lang-ru="Сортировка:" data-lang-en="Sort by:">Сортировка:</label>
+                <select id="sort-select">
+                    <option value="title-asc" data-lang-ru="Название (А-Я)" data-lang-en="Title (A-Z)">Название (А-Я)</option>
+                    <option value="title-desc" data-lang-ru="Название (Я-А)" data-lang-en="Title (Z-A)">Название (Я-А)</option>
+                    <option value="author-asc" data-lang-ru="Автор (А-Я)" data-lang-en="Author (A-Z)">Автор (А-Я)</option>
+                    <option value="author-desc" data-lang-ru="Автор (Я-А)" data-lang-en="Author (Z-A)">Автор (Я-А)</option>
+                </select>
+            </div>
+
+            <button id="reset-filters" class="btn-reset" data-lang-ru="Сбросить фильтры" data-lang-en="Reset filters">Сбросить фильтры</button>
+        </section>
+
+        <!-- Results Info -->
+        <section class="results-info">
+            <p data-lang-ru="Показано книг: <span id='shown-books'>424</span>" data-lang-en="Showing books: <span id='shown-books'>424</span>">Показано книг: <span id="shown-books">424</span></p>
+        </section>
+
+        <!-- Books Grid -->
+        <section class="books-grid" id="books-container">
+            <!-- Books will be populated by JavaScript -->
+        </section>
+
+        <!-- No Results Message -->
+        <div id="no-results" class="no-results" style="display: none;">
+            <p data-lang-ru="Книги не найдены. Попробуйте изменить параметры поиска." data-lang-en="No books found. Try changing your search criteria.">Книги не найдены. Попробуйте изменить параметры поиска.</p>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p data-lang-ru="Загрузка книг..." data-lang-en="Loading books...">Загрузка книг...</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Dmitry Potekhin. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="mailto:dvpotekhin@gmail.com">Email</a>
+                <a href="https://t.me/dmpotekhin" target="_blank">Telegram</a>
+                <a href="https://github.com/dmpotekhin" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/books-data.js"></script>
+    <script src="js/books.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
