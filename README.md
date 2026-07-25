@@ -1,99 +1,77 @@
-# Dmitry Potekhin - Resume Website
+# Dmitry Potekhin — Personal Website
 
-Professional resume website built with HTML, CSS, and JavaScript. Designed for GitHub Pages deployment.
+Professional website with resume, book collection (520+ books with notes), bilingual support, and dark/light themes. Deployed via GitHub Pages.
 
-## 🌟 Features
+## Features
 
-- **Bilingual Support**: Toggle between Russian and English
-- **Theme Toggle**: Switch between light and dark themes
-- **Responsive Design**: Works perfectly on all devices
-- **Resume Page**: Professional resume with downloadable PDFs
-- **Books Collection**: Browse through 424+ books with search and filter
-- **Modern UI**: Clean, professional design with smooth animations
+- **Resume**: Russian/English resume with downloadable PDFs
+- **Books Collection**: 521 books with genre filtering, sorting, and search
+- **Book Notes**: Expandable summaries (5 theses + takeaway) for 520 books
+- **Genre System**: 📖 Fiction | 🧠 Self-dev | 💻 IT/QA | 🌍 History
+- **Bilingual**: Russian/English toggle (Ctrl+L)
+- **Theme**: Light/dark toggle (Ctrl+K)
+- **Responsive**: Mobile-friendly design
 
-## 📁 Project Structure
+## Project Structure
 
 ```
-github_pages_site/
-├── index.html          # Main resume page
-├── books.html          # Books collection page
+├── index.html            # Resume page
+├── books.html            # Books collection page
 ├── css/
-│   └── styles.css      # Main stylesheet with theme support
+│   └── styles.css        # Theme support + book notes styles
 ├── js/
-│   ├── main.js         # Theme and language switching
-│   ├── books.js        # Books page functionality
-│   └── books-data.js   # Books data (424 books)
+│   ├── main.js           # Theme/language switching
+│   ├── books.js          # Books page: filter, sort, search, notes
+│   ├── books-data.js     # 521 books from Excel (auto-generated)
+│   └── notes-data.js     # Book notes: 5 theses + takeaway
 ├── downloads/
-│   ├── resume_ru.pdf   # Russian resume PDF
-│   └── resume_en.pdf   # English resume PDF
-└── README.md           # This file
+│   ├── resume_ru.pdf
+│   └── resume_en.pdf
+├── Книги.xlsx            # Source of truth for book data
+└── README.md
 ```
 
-## 🚀 Deployment to GitHub Pages
+## Book Notes Format
 
-1. Create a new repository on GitHub
-2. Push all files to the repository:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit: Resume website"
-   git branch -M main
-   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
-   git push -u origin main
-   ```
-3. Go to repository Settings → Pages
-4. Select "main" branch as source
-5. Your site will be live at: `https://YOUR_USERNAME.github.io/YOUR_REPO/`
+Each note in `js/notes-data.js`:
+```json
+{
+  "theses": [
+    "Тезис 1: герой и задача",
+    "Тезис 2: место/время",
+    "Тезис 3: конфликт",
+    "Тезис 4: поворот",
+    "Тезис 5: итог"
+  ],
+  "takeaway": "Вывод: суть книги, чему учит, польза."
+}
+```
 
-## 🎨 Customization
+## How to Add a Book
 
-### Updating Personal Information
-- Edit contact info in `index.html`
-- Replace PDF files in `downloads/` folder
-- Update books list in `js/books-data.js`
+1. **Add to Excel**: edit `Книги.xlsx` (columns: Author, Title, Genre)
+2. **Tell the AI**: `обнови таблицу` — AI parses Excel, regenerates `books-data.js`, writes a note, commits and pushes
+3. **Live**: https://dmpotekhin.github.io/books.html (Cmd+Shift+R if cached)
 
-### Changing Colors
-- Modify CSS variables in `css/styles.css` (`:root` section)
-- Light theme colors start at line 8
-- Dark theme colors start at line 27
-
-### Adding New Sections
-- Add HTML structure in `index.html`
-- Style it in `css/styles.css`
-- Add translations with `data-lang-ru` and `data-lang-en` attributes
-
-## ⌨️ Keyboard Shortcuts
+## Keyboard Shortcuts
 
 - `Ctrl/Cmd + K`: Toggle theme
 - `Ctrl/Cmd + L`: Toggle language
-- `Ctrl/Cmd + F`: Focus search (on books page)
-- `Esc`: Clear search (on books page)
+- `Ctrl/Cmd + F`: Focus search (books page)
+- `Esc`: Clear search (books page)
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-- **HTML5**: Semantic markup
-- **CSS3**: Modern styling with CSS variables
-- **JavaScript**: Vanilla JS (no dependencies)
-- **Responsive**: Mobile-first approach
+- HTML5, CSS3, Vanilla JS — no frameworks
+- GitHub Pages for hosting
+- Excel as data source
 
-## 📱 Browser Support
+## Contact
 
-- Chrome (recommended)
-- Firefox
-- Safari
-- Edge
-- Mobile browsers
-
-## 📄 License
-
-This project is open source and available under the MIT License.
-
-## 👤 Contact
-
-- **Email**: dvpotekhin@gmail.com
-- **Telegram**: [@dmpotekhin](https://t.me/dmpotekhin)
-- **GitHub**: [github.com/dmpotekhin](https://github.com/dmpotekhin)
+- Email: dvpotekhin@gmail.com
+- Telegram: [@dmpotekhin](https://t.me/dmpotekhin)
+- GitHub: [github.com/dmpotekhin](https://github.com/dmpotekhin)
 
 ---
 
-**Built with ❤️ by Dmitry Potekhin**
+**Built by Dmitry Potekhin**
