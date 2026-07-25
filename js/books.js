@@ -1,10 +1,11 @@
 // ========================================
 // Books Page JavaScript
-// Search, Filter, and Display Functionality
+// Search, Filter, Sort, and Display Functionality
 // ========================================
 
 let allBooks = [];
 let filteredBooks = [];
+let currentGenreFilter = 'all';
 let currentAuthorFilter = 'all';
 let currentSearchQuery = '';
 let currentSort = 'title-asc';
@@ -28,11 +29,16 @@ document.addEventListener('DOMContentLoaded', function() {
 // ========================================
 
 function initBooksPage() {
-    // Populate authors dropdown
+    // Populate dropdowns
+    populateGenreDropdown();
     populateAuthorsDropdown();
+    
+    // Build stats from data
+    buildStats();
     
     // Set up event listeners
     setupSearchListener();
+    setupGenreFilterListener();
     setupFilterListener();
     setupSortListener();
     setupResetListener();
@@ -43,6 +49,26 @@ function initBooksPage() {
     // Hide loading indicator
     const loading = document.getElementById('loading');
     if (loading) loading.style.display = 'none';
+}
+
+// ========================================
+// Populate Genre Dropdown
+// ========================================
+
+function populateGenreDropdown() {
+    const genreFilter = document.getElementById('genre-filter');
+    if (!genreFilter) return;
+    
+    // Get unique genres and sort them
+    const genres = [...new Set(allBooks.map(book => book.genre))].sort();
+    
+    // Add genres to dropdown
+    genres.forEach(genre => {
+        const option = document.createElement('option');
+        option.value = genre;
+        option.textContent = genre;
+        genreFilter.appendChild(option);
+    });
 }
 
 // ========================================
@@ -61,13 +87,75 @@ function populateAuthorsDropdown() {
         const option = document.createElement('option');
         option.value = author;
         option.textContent = author;
-        
-        // Add language attributes if needed
-        option.setAttribute('data-lang-ru', author);
-        option.setAttribute('data-lang-en', author);
-        
         authorFilter.appendChild(option);
     });
+}
+
+// ========================================
+// Build Stats from Data
+// ========================================
+
+function buildStats() {
+    const statsGrid = document.getElementById('stats-grid');
+    if (!statsGrid) return;
+    
+    // Count books per genre
+    const genreCounts = {};
+    allBooks.forEach(book => {
+        genreCounts[book.genre] = (genreCounts[book.genre] || 0) + 1;
+    });
+    
+    // Genre emoji mapping
+    const genreEmojis = {
+        '📖 Художественная литература': '📖',
+        '🧠 Саморазвитие / Бизнес / Психология': '🧠',
+        '💻 IT / QA / Разработка': '💻',
+        '🌍 История / Страноведение': '🌍'
+    };
+    
+    // Get the largest genre for highlight
+    const genreEntries = Object.entries(genreCounts);
+    genreEntries.sort((a, b) => b[1] - a[1]);
+    const largestGenre = genreEntries[0] ? genreEntries[0][0] : null;
+    
+    // Create stat cards
+    genreEntries.forEach(([genre, count]) => {
+        const card = document.createElement('div');
+        card.className = 'stat-card';
+        if (genre === largestGenre) {
+            card.classList.add('highlight');
+        }
+        
+        // Extract emoji from genre or use fallback
+        const emoji = genreEmojis[genre] || '📚';
+        
+        card.innerHTML = `
+            <span class="stat-emoji">${emoji}</span>
+            <span class="stat-number">${count}</span>
+            <span class="stat-label" data-lang-ru="${genre}" data-lang-en="${genre.replace(/[📖🧠💻🌍]\s*/, '')}">${genre}</span>
+        `;
+        
+        // Make stat cards clickable - filter by that genre
+        card.addEventListener('click', function() {
+            const genreFilter = document.getElementById('genre-filter');
+            if (genreFilter) {
+                genreFilter.value = genre;
+                currentGenreFilter = genre;
+                applyFilters();
+            }
+        });
+        
+        card.style.cursor = 'pointer';
+        card.title = `Фильтровать: ${genre}`;
+        
+        statsGrid.appendChild(card);
+    });
+    
+    // Update total count
+    const totalBooksEl = document.getElementById('total-books');
+    if (totalBooksEl) {
+        totalBooksEl.textContent = allBooks.length;
+    }
 }
 
 // ========================================
@@ -78,7 +166,6 @@ function setupSearchListener() {
     const searchInput = document.getElementById('search-input');
     if (!searchInput) return;
     
-    // Use debounce for better performance
     let debounceTimer;
     searchInput.addEventListener('input', function(e) {
         clearTimeout(debounceTimer);
@@ -86,6 +173,16 @@ function setupSearchListener() {
             currentSearchQuery = e.target.value.toLowerCase().trim();
             applyFilters();
         }, 300);
+    });
+}
+
+function setupGenreFilterListener() {
+    const genreFilter = document.getElementById('genre-filter');
+    if (!genreFilter) return;
+    
+    genreFilter.addEventListener('change', function(e) {
+        currentGenreFilter = e.target.value;
+        applyFilters();
     });
 }
 
@@ -116,16 +213,19 @@ function setupResetListener() {
     
     resetBtn.addEventListener('click', function() {
         // Reset all filters
+        currentGenreFilter = 'all';
         currentAuthorFilter = 'all';
         currentSearchQuery = '';
         currentSort = 'title-asc';
         
         // Reset UI elements
         const searchInput = document.getElementById('search-input');
+        const genreFilter = document.getElementById('genre-filter');
         const authorFilter = document.getElementById('author-filter');
         const sortSelect = document.getElementById('sort-select');
         
         if (searchInput) searchInput.value = '';
+        if (genreFilter) genreFilter.value = 'all';
         if (authorFilter) authorFilter.value = 'all';
         if (sortSelect) sortSelect.value = 'title-asc';
         
@@ -140,15 +240,19 @@ function setupResetListener() {
 
 function applyFilters() {
     filteredBooks = allBooks.filter(book => {
+        // Genre filter
+        const matchesGenre = currentGenreFilter === 'all' || book.genre === currentGenreFilter;
+        
         // Author filter
         const matchesAuthor = currentAuthorFilter === 'all' || book.author === currentAuthorFilter;
         
         // Search filter
         const matchesSearch = currentSearchQuery === '' || 
             book.title.toLowerCase().includes(currentSearchQuery) ||
-            book.author.toLowerCase().includes(currentSearchQuery);
+            book.author.toLowerCase().includes(currentSearchQuery) ||
+            book.genre.toLowerCase().includes(currentSearchQuery);
         
-        return matchesAuthor && matchesSearch;
+        return matchesGenre && matchesAuthor && matchesSearch;
     });
     
     // Sort the filtered results
@@ -173,6 +277,10 @@ function sortBooks() {
                 return a.author.localeCompare(b.author);
             case 'author-desc':
                 return b.author.localeCompare(a.author);
+            case 'genre-asc':
+                return a.genre.localeCompare(b.genre) || a.title.localeCompare(b.title);
+            case 'genre-desc':
+                return b.genre.localeCompare(a.genre) || a.title.localeCompare(b.title);
             default:
                 return 0;
         }
@@ -219,18 +327,24 @@ function renderBooks() {
 function createBookCard(book, index) {
     const card = document.createElement('div');
     card.className = 'book-card';
-    card.style.animationDelay = `${Math.min(index * 0.05, 1)}s`;
+    card.style.animationDelay = `${Math.min(index * 0.02, 1)}s`;
     
-    // Book icon
+    // Book icon (use genre emoji if available)
     const icon = document.createElement('div');
     icon.className = 'book-icon';
-    icon.textContent = '📖';
+    const emojiMatch = book.genre.match(/^([📖🧠💻🌍])\s*/);
+    icon.textContent = emojiMatch ? emojiMatch[1] : '📚';
+    
+    // Genre badge
+    const genreBadge = document.createElement('span');
+    genreBadge.className = 'book-genre-badge';
+    genreBadge.textContent = book.genre;
     
     // Book title
     const title = document.createElement('div');
     title.className = 'book-title';
     title.textContent = book.title;
-    title.title = book.title; // Tooltip for long titles
+    title.title = book.title;
     
     // Book author
     const author = document.createElement('div');
@@ -239,6 +353,7 @@ function createBookCard(book, index) {
     
     // Assemble card
     card.appendChild(icon);
+    card.appendChild(genreBadge);
     card.appendChild(title);
     card.appendChild(author);
     
@@ -248,7 +363,6 @@ function createBookCard(book, index) {
 function animateBookCards() {
     const cards = document.querySelectorAll('.book-card');
     
-    // Add CSS for animation if not already present
     if (!document.getElementById('book-card-animation')) {
         const style = document.createElement('style');
         style.id = 'book-card-animation';
@@ -256,7 +370,7 @@ function animateBookCards() {
             .book-card {
                 opacity: 0;
                 transform: translateY(20px);
-                animation: fadeInUp 0.5s ease forwards;
+                animation: fadeInUp 0.4s ease forwards;
             }
             
             @keyframes fadeInUp {
@@ -288,7 +402,7 @@ function updateBookStats() {
 }
 
 // ========================================
-// Export/Import Functions (for future use)
+// Export/Import Functions
 // ========================================
 
 function exportBooksToJSON() {

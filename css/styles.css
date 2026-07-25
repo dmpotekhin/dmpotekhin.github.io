@@ -750,6 +750,16 @@ header {
     display: inline-block;
 }
 
+.book-card .book-genre-badge {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--accent-primary);
+    margin-bottom: var(--spacing-xs);
+    text-align: center;
+    opacity: 0.8;
+    letter-spacing: 0.02em;
+}
+
 .no-results {
     text-align: center;
     padding: var(--spacing-xl);

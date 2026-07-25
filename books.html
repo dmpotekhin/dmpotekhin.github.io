@@ -34,32 +34,13 @@
         <!-- Books Header -->
         <section class="books-header">
             <h2 data-lang-ru="📚 Моя библиотека" data-lang-en="📚 My Library">📚 Моя библиотека</h2>
-            <p class="books-count" data-lang-ru="Всего книг: <span id="total-books">424</span>" data-lang-en="Total books: <span id='total-books'>424</span>">Всего книг: <span id="total-books">424</span></p>
+            <p class="books-count"><span data-lang-ru="Всего книг:" data-lang-en="Total books:">Всего книг:</span> <span id="total-books">521</span></p>
         </section>
-        <!-- Books Stats -->
+        <!-- Books Stats (dynamic: populated by JS) -->
         <section class="books-stats">
             <h3 data-lang-ru="📊 Разбивка по категориям" data-lang-en="📊 Breakdown by Category">📊 Разбивка по категориям</h3>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <span class="stat-emoji">📖</span>
-                    <span class="stat-number">180</span>
-                    <span class="stat-label" data-lang-ru="Художественная литература" data-lang-en="Fiction">Художественная литература</span>
-                </div>
-                <div class="stat-card highlight">
-                    <span class="stat-emoji">🧠</span>
-                    <span class="stat-number">140</span>
-                    <span class="stat-label" data-lang-ru="Саморазвитие / Бизнес / Психология" data-lang-en="Self-development / Business / Psychology">Саморазвитие / Бизнес / Психология</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-emoji">💻</span>
-                    <span class="stat-number">61</span>
-                    <span class="stat-label" data-lang-ru="IT / QA / Разработка" data-lang-en="IT / QA / Development">IT / QA / Разработка</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-emoji">🌍</span>
-                    <span class="stat-number">43</span>
-                    <span class="stat-label" data-lang-ru="История / Страноведение" data-lang-en="History / Country Studies">История / Страноведение</span>
-                </div>
+            <div class="stats-grid" id="stats-grid">
+                <!-- Populated by JavaScript -->
             </div>
         </section>
 
@@ -77,6 +58,14 @@
             </div>
             
             <div class="filter-section">
+                <label for="genre-filter" data-lang-ru="Фильтр по жанру:" data-lang-en="Filter by genre:">Фильтр по жанру:</label>
+                <select id="genre-filter">
+                    <option value="all" data-lang-ru="Все жанры" data-lang-en="All genres">Все жанры</option>
+                    <!-- Genres will be populated by JavaScript -->
+                </select>
+            </div>
+
+            <div class="filter-section">
                 <label for="author-filter" data-lang-ru="Фильтр по автору:" data-lang-en="Filter by author:">Фильтр по автору:</label>
                 <select id="author-filter">
                     <option value="all" data-lang-ru="Все авторы" data-lang-en="All authors">Все авторы</option>
@@ -91,6 +80,8 @@
                     <option value="title-desc" data-lang-ru="Название (Я-А)" data-lang-en="Title (Z-A)">Название (Я-А)</option>
                     <option value="author-asc" data-lang-ru="Автор (А-Я)" data-lang-en="Author (A-Z)">Автор (А-Я)</option>
                     <option value="author-desc" data-lang-ru="Автор (Я-А)" data-lang-en="Author (Z-A)">Автор (Я-А)</option>
+                    <option value="genre-asc" data-lang-ru="Жанр (А-Я)" data-lang-en="Genre (A-Z)">Жанр (А-Я)</option>
+                    <option value="genre-desc" data-lang-ru="Жанр (Я-А)" data-lang-en="Genre (Z-A)">Жанр (Я-А)</option>
                 </select>
             </div>
 
@@ -99,7 +90,7 @@
 
         <!-- Results Info -->
         <section class="results-info">
-            <p data-lang-ru="Показано книг: <span id='shown-books'>424</span>" data-lang-en="Showing books: <span id='shown-books'>424</span>">Показано книг: <span id="shown-books">424</span></p>
+            <p class="results-info-text"><span data-lang-ru="Показано книг:" data-lang-en="Showing books:">Показано книг:</span> <span id="shown-books">521</span></p>
         </section>
 
         <!-- Books Grid -->
