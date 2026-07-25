@@ -766,19 +766,18 @@ header {
     width: 100%;
     margin-top: var(--spacing-sm);
     padding: var(--spacing-xs) var(--spacing-sm);
-    border: 1px dashed var(--accent-primary);
+    border: 1px solid var(--accent-primary);
     border-radius: var(--radius-sm);
-    background: transparent;
-    color: var(--accent-primary);
+    background: var(--accent-primary);
+    color: white;
     cursor: pointer;
     font-size: 0.85rem;
     transition: all var(--transition-fast);
 }
 
 .book-card .book-notes-btn:hover {
-    background-color: var(--accent-primary);
-    color: white;
-    border-style: solid;
+    background: var(--accent-hover, #2a48b0);
+    border-color: var(--accent-hover, #2a48b0);
 }
 
 .book-card.has-notes {
