@@ -351,11 +351,45 @@ function createBookCard(book, index) {
     author.className = 'book-author';
     author.textContent = book.author;
     
+    // Check for notes
+    const hasNotes = typeof bookNotes !== 'undefined' && bookNotes[book.title];
+    
     // Assemble card
     card.appendChild(icon);
     card.appendChild(genreBadge);
     card.appendChild(title);
     card.appendChild(author);
+    
+    // Add notes button and expandable section if notes exist
+    if (hasNotes) {
+        card.classList.add('has-notes');
+        
+        const notesBtn = document.createElement('button');
+        notesBtn.className = 'book-notes-btn';
+        notesBtn.textContent = '📝 Заметки';
+        notesBtn.title = 'Читать заметки';
+        card.appendChild(notesBtn);
+        
+        // Expandable notes section
+        const notesPanel = document.createElement('div');
+        notesPanel.className = 'book-notes-panel';
+        
+        const note = bookNotes[book.title];
+        notesPanel.innerHTML = `
+            <div class="book-notes-summary">${note.summary}</div>
+            <div class="book-notes-themes">
+                ${note.themes.map(t => `<span class="book-notes-tag">${t}</span>`).join(' ')}
+            </div>
+        `;
+        card.appendChild(notesPanel);
+        
+        // Toggle notes on click
+        notesBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isOpen = card.classList.toggle('notes-open');
+            notesBtn.textContent = isOpen ? '📝 Скрыть' : '📝 Заметки';
+        });
+    }
     
     return card;
 }

@@ -760,6 +760,69 @@ header {
     letter-spacing: 0.02em;
 }
 
+/* Book Notes */
+.book-card .book-notes-btn {
+    display: block;
+    width: 100%;
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px dashed var(--accent-primary);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--accent-primary);
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all var(--transition-fast);
+}
+
+.book-card .book-notes-btn:hover {
+    background-color: var(--accent-primary);
+    color: white;
+    border-style: solid;
+}
+
+.book-card.has-notes {
+    cursor: default;
+}
+
+.book-notes-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.35s ease, margin 0.35s ease;
+    padding: 0 var(--spacing-sm);
+    margin-top: 0;
+}
+
+.book-card.notes-open .book-notes-panel {
+    max-height: 600px;
+    padding: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+    overflow-y: auto;
+}
+
+.book-notes-summary {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.book-notes-themes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.book-notes-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
 .no-results {
     text-align: center;
     padding: var(--spacing-xl);
