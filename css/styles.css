@@ -800,27 +800,30 @@ header {
     overflow-y: auto;
 }
 
-.book-notes-summary {
+.book-notes-theses {
     font-size: 0.85rem;
-    line-height: 1.5;
+    line-height: 1.6;
     color: var(--text-primary);
     margin-bottom: var(--spacing-sm);
 }
 
-.book-notes-themes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
+.book-notes-theses ol {
+    margin: 0;
+    padding-left: 1.4em;
 }
 
-.book-notes-tag {
-    display: inline-block;
-    font-size: 0.7rem;
-    padding: 2px 8px;
-    border-radius: 10px;
+.book-notes-theses li {
+    margin-bottom: 4px;
+}
+
+.book-notes-takeaway {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    padding: var(--spacing-xs) var(--spacing-sm);
     background-color: var(--bg-tertiary);
-    color: var(--text-secondary);
-    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--accent-primary);
 }
 
 .no-results {

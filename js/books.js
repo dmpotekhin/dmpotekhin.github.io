@@ -376,9 +376,13 @@ function createBookCard(book, index) {
         
         const note = bookNotes[book.title];
         notesPanel.innerHTML = `
-            <div class="book-notes-summary">${note.summary}</div>
-            <div class="book-notes-themes">
-                ${note.themes.map(t => `<span class="book-notes-tag">${t}</span>`).join(' ')}
+            <div class="book-notes-theses">
+                <ol>
+                    ${note.theses.map(t => `<li>${t}</li>`).join('')}
+                </ol>
+            </div>
+            <div class="book-notes-takeaway">
+                <strong>💡 Вывод:</strong> ${note.takeaway}
             </div>
         `;
         card.appendChild(notesPanel);
