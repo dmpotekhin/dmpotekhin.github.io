@@ -329,11 +329,11 @@ function createBookCard(book, index) {
     card.className = 'book-card';
     card.style.animationDelay = `${Math.min(index * 0.02, 1)}s`;
     
-    // Book icon (use genre emoji if available)
+    // Book icon: extract emoji from genre (e.g. "📖 Художественная литература" → "📖")
     const icon = document.createElement('div');
     icon.className = 'book-icon';
-    const emojiMatch = book.genre.match(/^([📖🧠💻🌍])\s*/);
-    icon.textContent = emojiMatch ? emojiMatch[1] : '📚';
+    const genreParts = book.genre.split(' ');
+    icon.textContent = genreParts[0] || '📚';
     
     // Genre badge
     const genreBadge = document.createElement('span');
