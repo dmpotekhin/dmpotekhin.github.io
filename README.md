@@ -1,12 +1,12 @@
 # Dmitry Potekhin — Personal Website
 
-Professional website with resume, book collection (520+ books with notes), bilingual support, and dark/light themes. Deployed via GitHub Pages.
+Professional website with resume, book collection (525+ books with notes), bilingual support, and dark/light themes. Deployed via GitHub Pages.
 
 ## Features
 
 - **Resume**: Russian/English resume with downloadable PDFs
-- **Books Collection**: 521 books with genre filtering, sorting, and search
-- **Book Notes**: Expandable summaries (5 theses + takeaway) for 520 books
+- **Books Collection**: 525 books with genre filtering, sorting, and search
+- **Book Notes**: Expandable summaries (5 theses + takeaway) for 524 books
 - **Genre System**: 📖 Fiction | 🧠 Self-dev | 💻 IT/QA | 🌍 History
 - **Bilingual**: Russian/English toggle (Ctrl+L)
 - **Theme**: Light/dark toggle (Ctrl+K)
@@ -22,7 +22,7 @@ Professional website with resume, book collection (520+ books with notes), bilin
 ├── js/
 │   ├── main.js           # Theme/language switching
 │   ├── books.js          # Books page: filter, sort, search, notes
-│   ├── books-data.js     # 521 books from Excel (auto-generated)
+│   ├── books-data.js     # 525 books from Excel (auto-generated)
 │   └── notes-data.js     # Book notes: 5 theses + takeaway
 ├── downloads/
 │   ├── resume_ru.pdf
