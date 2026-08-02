@@ -739,6 +739,7 @@ header {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-align: center;
 }
 
 .book-card .book-author {
@@ -747,7 +748,8 @@ header {
     padding: var(--spacing-xs) var(--spacing-sm);
     background-color: var(--bg-tertiary);
     border-radius: var(--radius-sm);
-    display: inline-block;
+    display: block;
+    text-align: center;
 }
 
 .book-card .book-genre-badge {
