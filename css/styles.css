@@ -20,12 +20,12 @@
     --danger: #dc3545;
     --info: #0dcaf0;
 
-    /* Spacing */
-    --spacing-xs: 0.5rem;
-    --spacing-sm: 1rem;
-    --spacing-md: 1.5rem;
-    --spacing-lg: 2rem;
-    --spacing-xl: 3rem;
+    /* Spacing — responsive via container queries fallback */
+    --spacing-xs: clamp(0.25rem, 0.5vw, 0.5rem);
+    --spacing-sm: clamp(0.5rem, 1vw, 1rem);
+    --spacing-md: clamp(0.75rem, 1.5vw, 1.5rem);
+    --spacing-lg: clamp(1rem, 2vw, 2rem);
+    --spacing-xl: clamp(1.5rem, 3vw, 3rem);
 
     /* Border Radius */
     --radius-sm: 0.25rem;
@@ -90,10 +90,10 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.3;
 }
 
-h1 { font-size: 2.5rem; }
-h2 { font-size: 2rem; }
-h3 { font-size: 1.75rem; }
-h4 { font-size: 1.5rem; }
+h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); }
+h2 { font-size: clamp(1.5rem, 3.5vw, 2rem); }
+h3 { font-size: clamp(1.25rem, 3vw, 1.75rem); }
+h4 { font-size: clamp(1.1rem, 2.5vw, 1.5rem); }
 
 p {
     margin-bottom: var(--spacing-sm);
@@ -207,19 +207,19 @@ header {
 }
 
 .hero-title {
-    font-size: 2rem;
+    font-size: clamp(1.25rem, 3vw, 2rem);
     margin-bottom: var(--spacing-sm);
     color: var(--text-primary);
 }
 
 .hero-subtitle {
-    font-size: 1.1rem;
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
     color: var(--text-secondary);
 }
 
 .profile-photo {
-    width: 220px;
-    height: 220px;
+    width: clamp(140px, 20vw, 220px);
+    height: clamp(140px, 20vw, 220px);
     border-radius: 50%;
     object-fit: cover;
     border: 4px solid var(--accent-primary);
@@ -443,7 +443,7 @@ header {
    ======================================== */
 .education-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: var(--spacing-md);
 }
 
@@ -567,7 +567,7 @@ header {
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     gap: var(--spacing-md);
 }
 
@@ -632,7 +632,20 @@ header {
     border-radius: var(--radius-lg);
     margin-bottom: var(--spacing-lg);
     display: grid;
+    grid-template-columns: 1fr;
     gap: var(--spacing-md);
+}
+
+@media (min-width: 640px) {
+    .books-controls {
+        grid-template-columns: 2fr 1fr 1fr;
+        align-items: end;
+    }
+    .filter-section, .sort-section {
+        flex-direction: row;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
 }
 
 .search-box {
@@ -668,19 +681,20 @@ header {
 
 .filter-section, .sort-section {
     display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
 }
 
 .filter-section label, .sort-section label {
     font-weight: 500;
     color: var(--text-primary);
+    font-size: 0.9rem;
 }
 
 .filter-section select, .sort-section select {
-    flex: 1;
-    min-width: 200px;
+    width: 100%;
+    min-width: unset;
     padding: var(--spacing-xs) var(--spacing-sm);
     border: 2px solid var(--border-color);
     border-radius: var(--radius-md);
@@ -906,14 +920,11 @@ footer p {
     .hero {
         grid-template-columns: 1fr;
         text-align: center;
+        padding: var(--spacing-md) 0;
     }
 
-    .profile-placeholder {
+    .profile-photo {
         margin: 0 auto;
-    }
-
-    .hero-title {
-        font-size: 1.5rem;
     }
 
     .contact-grid {
@@ -938,18 +949,10 @@ footer p {
         grid-template-columns: 1fr;
     }
 
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
     footer .container {
         flex-direction: column;
         text-align: center;
     }
-
-    h1 { font-size: 2rem; }
-    h2 { font-size: 1.75rem; }
-    h3 { font-size: 1.5rem; }
 }
 
 @media (max-width: 480px) {
@@ -962,17 +965,36 @@ footer p {
         width: 100%;
     }
 
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: var(--spacing-sm);
-    }
-
     .stat-number {
-        font-size: 1.6rem;
+        font-size: clamp(1.3rem, 5vw, 1.6rem);
     }
 
     .stat-emoji {
-        font-size: 1.8rem;
+        font-size: clamp(1.4rem, 5vw, 1.8rem);
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+    }
+
+    .books-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Touch-friendly selects on mobile */
+    .filter-section select,
+    .sort-section select {
+        min-height: 44px;
+        font-size: 1rem;
+    }
+
+    .search-box input {
+        min-height: 44px;
+    }
+
+    .btn-nav, .btn-lang {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.9rem;
     }
 }
 
