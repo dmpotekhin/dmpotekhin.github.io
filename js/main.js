@@ -17,20 +17,23 @@ document.addEventListener('DOMContentLoaded', function() {
 // ========================================
 
 function initTheme() {
-    // Check for saved theme preference or default to light mode
-    const savedTheme = localStorage.getItem('theme') || 'light';
+    // Check for saved theme preference or default to dark mode
+    const savedTheme = localStorage.getItem('theme') || 'dark';
     applyTheme(savedTheme);
 }
 
 function applyTheme(theme) {
     const body = document.body;
+    const html = document.documentElement;
     const themeIcon = document.querySelector('.theme-icon');
     
     if (theme === 'dark') {
         body.classList.add('dark-theme');
+        html.classList.add('dark-theme');
         if (themeIcon) themeIcon.textContent = '☀️';
     } else {
         body.classList.remove('dark-theme');
+        html.classList.remove('dark-theme');
         if (themeIcon) themeIcon.textContent = '🌙';
     }
     
