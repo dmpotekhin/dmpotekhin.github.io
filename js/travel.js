@@ -10,17 +10,40 @@
   var map = null;
   var didFit = false;
 
-  // Build a heart icon image (color emoji painted to canvas -> ImageData).
+  // Build a Google-Maps-style heart marker: a pink disc with a white heart,
+  // a white ring and a soft drop shadow (painted to canvas -> ImageData).
+  function drawHeart(ctx, x, y, s) {
+    ctx.beginPath();
+    ctx.moveTo(x, y + s * 0.28);
+    ctx.bezierCurveTo(x, y, x - s * 0.5, y, x - s * 0.5, y + s * 0.28);
+    ctx.bezierCurveTo(x - s * 0.5, y + s * 0.58, x, y + s * 0.88, x, y + s * 1.0);
+    ctx.bezierCurveTo(x, y + s * 0.88, x + s * 0.5, y + s * 0.58, x + s * 0.5, y + s * 0.28);
+    ctx.bezierCurveTo(x + s * 0.5, y, x, y, x, y + s * 0.28);
+    ctx.closePath();
+    ctx.fill();
+  }
   function makeHeartImage(size) {
     size = size || 96;
     var c = document.createElement('canvas');
     c.width = c.height = size;
     var ctx = c.getContext('2d');
-    ctx.clearRect(0, 0, size, size);
-    ctx.font = Math.floor(size * 0.82) + 'px serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('\u2764\uFE0F', size / 2, size / 2 + size * 0.04);
+    var cx = size / 2, cy = size / 2;
+    var R = size * 0.40;
+    // white disc + soft drop shadow (forms the white ring under the pink disc)
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.30)';
+    ctx.shadowBlur = size * 0.07;
+    ctx.shadowOffsetY = size * 0.02;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    // pink disc
+    ctx.fillStyle = '#f2325f';
+    ctx.beginPath(); ctx.arc(cx, cy, R - size * 0.06, 0, Math.PI * 2); ctx.fill();
+    // white heart
+    ctx.fillStyle = '#ffffff';
+    var hs = size * 0.34;
+    drawHeart(ctx, cx, cy - hs * 0.34, hs);
     return ctx.getImageData(0, 0, size, size);
   }
 
@@ -48,7 +71,7 @@
     }
 
     if (!map.hasImage('heart')) {
-      map.addImage('heart', makeHeartImage());
+      map.addImage('heart', makeHeartImage(), { pixelRatio: 2 });
     }
 
     if (!map.getLayer('visited-fill')) {
@@ -56,13 +79,13 @@
         id: 'visited-fill',
         type: 'fill',
         source: 'visited',
-        paint: { 'fill-color': '#e0245e', 'fill-opacity': 0.22 }
+        paint: { 'fill-color': ['get', 'fillColor'], 'fill-opacity': 0.6 }
       });
       map.addLayer({
         id: 'visited-border',
         type: 'line',
         source: 'visited',
-        paint: { 'line-color': '#e0245e', 'line-width': 0.7, 'line-opacity': 0.55 }
+        paint: { 'line-color': ['get', 'fillColor'], 'line-width': 1.1, 'line-opacity': 0.9 }
       });
     }
 
@@ -73,7 +96,7 @@
         source: 'cities',
         filter: ['has', 'point_count'],
         paint: {
-          'circle-color': '#e0245e',
+          'circle-color': '#f2325f',
           'circle-radius': ['step', ['get', 'point_count'], 16, 25, 21, 60, 26],
           'circle-opacity': 0.85,
           'circle-stroke-width': 2,
@@ -99,7 +122,7 @@
         filter: ['!', ['has', 'point_count']],
         layout: {
           'icon-image': 'heart',
-          'icon-size': 0.5,
+          'icon-size': 0.62,
           'icon-allow-overlap': true,
           'icon-pitch-alignment': 'viewport'
         }
