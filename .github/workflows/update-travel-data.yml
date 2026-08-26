@@ -7,8 +7,10 @@
 #
 # The path filter on города.xlsx is ESSENTIAL: the auto-commit below touches only
 # the generated data files (never the xlsx), so the path filter keeps this workflow
-# from re-triggering itself in a loop. The auto-commit also carries a [skip ci]
-# marker as a second safety net.
+# from re-triggering itself in a loop. No "[skip ci]" here: that would also block the
+# GitHub Pages Actions rebuild (this repo deploys Pages via Actions, as seen in the
+# build/deploy/report-build-status workflows), so the re-pushed data would never be
+# served. Safe re-trigger prevention comes from the paths filter alone.
 name: Update travel map data
 
 on:
@@ -60,5 +62,5 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Update travel map data from города.xlsx [skip ci]"
+          git commit -m "Update travel map data from города.xlsx"
           git push
