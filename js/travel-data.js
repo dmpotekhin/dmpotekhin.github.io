@@ -1,4 +1,4 @@
-// Auto-generated: visited cities travel data (255 cities / 50 countries)
+// Auto-generated: visited cities travel data (256 cities / 51 countries)
 // Source: города.xlsx -> Nominatim geocoding. Do not edit by hand; edit города.xlsx then re-run.
 window.TRAVEL_CITIES = [
   {name:"Агинское", country:"Россия", cc:"RU", lat:51.10576, lon:114.54080},
@@ -134,6 +134,7 @@ window.TRAVEL_CITIES = [
   {name:"Махачкала", country:"Россия", cc:"RU", lat:42.98302, lon:47.50487},
   {name:"Медан", country:"Индонезия", cc:"ID", lat:3.58946, lon:98.67416},
   {name:"Медельин", country:"Колумбия", cc:"CO", lat:6.24434, lon:-75.57355},
+  {name:"Мельбурн", country:"AU", cc:"AU", lat:-37.81425, lon:144.96317},
   {name:"Мендоса", country:"Аргентина", cc:"AR", lat:-34.59703, lon:-68.73048},
   {name:"Минводы", country:"Россия", cc:"RU", lat:44.21074, lon:43.13497},
   {name:"Минск", country:"Беларусь", cc:"BY", lat:53.90247, lon:27.56182},
