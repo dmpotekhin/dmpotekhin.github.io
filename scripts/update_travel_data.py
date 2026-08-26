@@ -173,6 +173,8 @@ def main():
     for nm in delta:
         log("  geocoding:", nm)
         res = geocode(nm)
+        # be polite to Nominatim usage policy (max ~1 request/sec)
+        time.sleep(1.0)
         if not res:
             log("    !! no result for", nm, "skipped")
             continue

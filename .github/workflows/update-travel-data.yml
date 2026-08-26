@@ -1,0 +1,64 @@
+# Rebuild travel-map data automatically when the source city table changes.
+#
+# Flow: push edits to города.xlsx -> this workflow runs -> scripts/update_travel_data.py
+# geocodes only the NEW cities and regenerates js/travel-data.js +
+# data/visited_countries.geojson -> if the data changed it commits and pushes back,
+# which triggers the GitHub Pages rebuild (classic Pages / Actions Pages).
+#
+# The path filter on города.xlsx is ESSENTIAL: the auto-commit below touches only
+# the generated data files (never the xlsx), so the path filter keeps this workflow
+# from re-triggering itself in a loop. The auto-commit also carries a [skip ci]
+# marker as a second safety net.
+name: Update travel map data
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "города.xlsx"
+
+permissions:
+  contents: write
+
+# Keep the action serialized: if you push twice quickly, the latest run wins.
+concurrency:
+  group: travel-data-update
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          # fetch full history so `git diff` can see what changed
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Run the update pipeline
+        run: python3 scripts/update_travel_data.py
+
+      - name: Commit and push generated data (if changed)
+        run: |
+          set -x
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Stage only the generated artifacts — never города.xlsx / Книги.xlsx.
+          git add js/travel-data.js data/visited_countries.geojson
+
+          if git diff --cached --quiet; then
+            echo "No data changes — nothing to commit."
+            exit 0
+          fi
+
+          git commit -m "Update travel map data from города.xlsx [skip ci]"
+          git push
