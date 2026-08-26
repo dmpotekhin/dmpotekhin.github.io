@@ -111,18 +111,6 @@
         }
       });
       map.addLayer({
-        id: 'cluster-count',
-        type: 'symbol',
-        source: 'cities',
-        filter: ['has', 'point_count'],
-        layout: {
-          'text-field': ['get', 'point_count_abbreviated'],
-          'text-size': 12,
-          'text-font': ['Open Sans Regular']
-        },
-        paint: { 'text-color': '#ffffff' }
-      });
-      map.addLayer({
         id: 'hearts',
         type: 'symbol',
         source: 'cities_flat',
@@ -133,6 +121,19 @@
           'icon-ignore-placement': true,
           'icon-pitch-alignment': 'viewport'
         }
+      });
+      // Cluster count text drawn above the hearts so it stays readable.
+      map.addLayer({
+        id: 'cluster-count',
+        type: 'symbol',
+        source: 'cities',
+        filter: ['has', 'point_count'],
+        layout: {
+          'text-field': ['get', 'point_count_abbreviated'],
+          'text-size': 12,
+          'text-font': ['Open Sans Regular']
+        },
+        paint: { 'text-color': '#ffffff', 'text-halo-color': '#c2103f', 'text-halo-width': 1.5 }
       });
     }
 
