@@ -66,6 +66,13 @@
         clusterRadius: 36
       });
     }
+    // Flat (un-clustered) copy so every heart is always rendered on every zoom.
+    if (!map.getSource('cities_flat')) {
+      map.addSource('cities_flat', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: cities.map(toFeature) }
+      });
+    }
     if (!map.getSource('visited')) {
       map.addSource('visited', { type: 'geojson', data: countriesGeojson });
     }
@@ -99,7 +106,7 @@
           'circle-color': '#f2325f',
           'circle-radius': ['step', ['get', 'point_count'], 16, 25, 21, 60, 26],
           'circle-opacity': 0.85,
-          'circle-stroke-width': 2,
+          'circle-stroke-width': 2.5,
           'circle-stroke-color': '#ffffff'
         }
       });
@@ -118,12 +125,12 @@
       map.addLayer({
         id: 'hearts',
         type: 'symbol',
-        source: 'cities',
-        filter: ['!', ['has', 'point_count']],
+        source: 'cities_flat',
         layout: {
           'icon-image': 'heart',
-          'icon-size': 0.62,
+          'icon-size': ['interpolate', ['linear'], ['zoom'], 1, 0.42, 6, 0.62],
           'icon-allow-overlap': true,
+          'icon-ignore-placement': true,
           'icon-pitch-alignment': 'viewport'
         }
       });
