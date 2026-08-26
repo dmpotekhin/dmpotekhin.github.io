@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dmitry Potekhin - Travel Map (visited cities and countries)">
+    <title>Travel Map - Dmitry Potekhin</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/travel.css">
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+    <script>
+        (function() {
+            var theme = localStorage.getItem('theme');
+            if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches) || !theme) {
+                document.documentElement.classList.add('dark-theme');
+            }
+        })();
+    </script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-brand">
+                    <h1>Dmitry Potekhin</h1>
+                    <p class="subtitle" data-lang-ru="Карта путешествий" data-lang-en="Travel Map">Карта путешествий</p>
+                </div>
+                <div class="nav-controls">
+                    <button id="theme-toggle" class="btn-icon" aria-label="Toggle theme">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button id="lang-toggle" class="btn-lang" aria-label="Toggle language">
+                        <span id="current-lang">EN</span>
+                    </button>
+                    <a href="index.html" class="btn-nav" data-lang-ru="👤 Резюме" data-lang-en="👤 Resume">👤 Resume</a>
+                    <a href="books.html" class="btn-nav" data-lang-ru="📚 Книги" data-lang-en="📚 Books">📚 Books</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="travel-layout">
+        <!-- Sidebar -->
+        <aside class="travel-panel">
+            <div class="travel-header">
+                <h2 data-lang-ru="🗺️ Мои путешествия" data-lang-en="🗺️ My Travels">🗺️ Мои путешествия</h2>
+                <div class="travel-stats" id="travel-stats"></div>
+            </div>
+            <div class="travel-controls">
+                <input type="text" id="travel-search" data-placeholder-ru="Поиск: город или страна..." data-placeholder-en="Search: city or country..." placeholder="Поиск: город или страна...">
+            </div>
+            <div class="travel-filters">
+                <label for="filter-countries"><input type="checkbox" id="filter-countries" checked> Страны</label>
+                <label for="filter-cities"><input type="checkbox" id="filter-cities" checked> Города</label>
+            </div>
+            <div class="travel-list" id="travel-list"></div>
+            <div class="travel-legend">
+                <span class="key"><span class="dot" style="background:#e0245e"></span> Посещено</span>
+            </div>
+            <div class="travel-note">
+                <span data-lang-ru="Сердечки — города, где я был. Розовым выделены посещённые страны." data-lang-en="Hearts mark the cities I have visited. Visited countries are highlighted.">Сердечки — города, где я был. Розовым выделены посещённые страны.</span>
+            </div>
+        </aside>
+
+        <!-- Map -->
+        <div id="map"></div>
+    </main>
+
+    <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/travel-data.js"></script>
+    <script src="js/travel.js"></script>
+</body>
+</html>
