@@ -184,31 +184,44 @@
     // Add custom layers once the initial style is loaded (guaranteed event).
     map.on('load', addLayers);
 
-    // Click handlers bound once; they key off layer ids at dispatch time.
-    map.on('click', 'hearts', function (e) {
-      if (e.features && e.features.length) {
-        openPopup(e.features[0].properties, e.features[0].geometry.coordinates);
-      }
-    });
+    // One click handler with layer priority: a cluster expands first, then a single
+    // heart opens its city popup, and only a bare country fill shows the aggregate
+    // "N городов". This stops a heart/cluster click from ALSO firing the country
+    // popup that sits underneath (old bug: clicking a heart showed the whole
+    // country's city count instead of just that one city).
     map.on('mouseenter', 'hearts', function () { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', 'hearts', function () { map.getCanvas().style.cursor = ''; });
 
-    map.on('click', 'clusters', function (e) {
-      var feat = e.features[0];
-      map.getSource('cities').getClusterExpansionZoom(feat.properties.cluster_id, function (err, zoom) {
-        if (err) return;
-        map.easeTo({ center: feat.geometry.coordinates, zoom: zoom });
-      });
-    });
-
-    map.on('click', 'visited-fill', function (e) {
-      var props = e.features[0] && e.features[0].properties;
-      if (!props) return;
-      var cc = props.ISO_A2 || '';
+    function openCountryPopup(props, lngLat) {
+      var cc = props && props.ISO_A2 ? props.ISO_A2 : '';
       var list = cities.filter(function (c) { return c.cc === cc; });
-      var html = '<div class="travel-popup"><div class="popup-city">' + (props.NAME || cc) + '</div>' +
+      var html = '<div class="travel-popup"><div class="popup-city">' + (props && (props.NAME || cc)) + '</div>' +
         '<div class="popup-country">' + (list.length ? '📍 ' + list.length + ' ' + (list.length === 1 ? 'город' : 'городов') : '') + '</div></div>';
-      new maplibregl.Popup().setLngLat(e.lngLat).setHTML(html).addTo(map);
+      new maplibregl.Popup().setLngLat(lngLat).setHTML(html).addTo(map);
+    }
+
+    map.on('click', function (e) {
+      var pt = e.point;
+      // 1) cluster -> expand to reveal the cities inside it.
+      // getClusterExpansionZoom() is unreliable in this build (its callback never
+      // fires), so we zoom just past the clustering threshold (clusterMaxZoom 5)
+      // where every city renders as an individual heart.
+      var cluster = map.queryRenderedFeatures(pt, { layers: ['clusters'] });
+      if (cluster.length) {
+        map.easeTo({ center: cluster[0].geometry.coordinates, zoom: 6 });
+        return;
+      }
+      // 2) heart -> the exact city popup for THIS heart
+      var heart = map.queryRenderedFeatures(pt, { layers: ['hearts'] });
+      if (heart.length) {
+        openPopup(heart[0].properties, heart[0].geometry.coordinates);
+        return;
+      }
+      // 3) bare country fill -> aggregate count
+      var fill = map.queryRenderedFeatures(pt, { layers: ['visited-fill'] });
+      if (fill.length) {
+        openCountryPopup(fill[0].properties, e.lngLat);
+      }
     });
 
     renderSidebar();
