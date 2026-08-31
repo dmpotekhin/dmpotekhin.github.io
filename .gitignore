@@ -4,3 +4,7 @@ scripts/nominatim_cache.json
 # Python
 __pycache__/
 *.pyc
+
+# IDE / OS
+.idea/
+.DS_Store

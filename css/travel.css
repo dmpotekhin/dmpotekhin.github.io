@@ -159,6 +159,19 @@
 .travel-popup .popup-country { font-size: 0.8rem; color: #555; }
 .dark-theme .travel-popup .popup-city { color: #eee; }
 .dark-theme .travel-popup .popup-country { color: #aaa; }
+.travel-popup .popup-photo {
+    display: block; width: 220px; max-height: 160px; object-fit: cover;
+    border-radius: 8px; margin-bottom: 8px;
+}
+.travel-popup .popup-video {
+    display: block; width: 220px; max-height: 160px; border-radius: 8px;
+    margin-bottom: 8px; background: #000;
+}
+.dark-theme .travel-popup { color: #eee; }
+.travel-item .list-thumb {
+    width: 22px; height: 22px; border-radius: 6px; object-fit: cover;
+    flex: 0 0 auto; margin-right: 8px;
+}
 
 @media (max-width: 720px) {
     .travel-layout { flex-direction: column; height: calc(100vh - 96px); }

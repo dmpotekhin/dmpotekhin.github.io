@@ -193,6 +193,17 @@ def main():
         added_city.append((nm, country, cc, res["lat"], res["lon"]))
         log("    ->", res["lat"], res["lon"], "cc", cc)
 
+    # ---- reconcile: города.xlsx is the source of truth, so drop any city that
+    # ---- is no longer present in the xlsx (removals), while keeping the
+    # ---- typo-corrected names (SKIP_TYPOS values) that the xlsx references only
+    # ---- via the misspelling.
+    xlsx_set = {nm.strip() for nm in xlsx_names}
+    keep = xlsx_set | set(SKIP_TYPOS.values())
+    dropped = sorted(k for k in cities if k not in keep)
+    if dropped:
+        log("  dropping obsolete cities:", dropped)
+        cities = {k: v for k, v in cities.items() if k in keep}
+
     ordered = sorted(cities.values(), key=lambda c: c["name"])
     n_countries = len(set(c["cc"] for c in ordered if c["cc"]))
     header = ("// Auto-generated: visited cities travel data ("
@@ -212,6 +223,13 @@ def main():
     geoj = json.load(open(GEOJSON, encoding="utf-8"))
     a2_seen = {f["properties"]["ISO_A2"] for f in geoj["features"]}
     wanted = set(c["cc"] for c in cities.values() if c["cc"])
+    # drop country polygons for countries no longer visited (removals)
+    gone = sorted(a2_seen - wanted)
+    if gone:
+        log("  dropping obsolete country polygons:", gone)
+        geoj["features"] = [f for f in geoj["features"]
+                            if f["properties"]["ISO_A2"] in wanted]
+        a2_seen = {f["properties"]["ISO_A2"] for f in geoj["features"]}
     missing = wanted - a2_seen
     log("  countries in geojson:", len(a2_seen), " missing:", missing)
     if missing:

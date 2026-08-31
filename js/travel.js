@@ -6,6 +6,8 @@
   var VOYAGER = 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json';
 
   var cities = (window.TRAVEL_CITIES || []).slice();
+  var MEDIA = (window.TRAVEL_MEDIA || {});
+  cities.forEach(function (c) { if (MEDIA[c.name]) c.media = MEDIA[c.name]; });
   var countriesGeojson = 'data/visited_countries.geojson';
   var map = null;
   var didFit = false;
@@ -51,7 +53,7 @@
     return {
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [Number(c.lon), Number(c.lat)] },
-      properties: { name: c.name, country: c.country, cc: c.cc }
+      properties: { name: c.name, country: c.country, cc: c.cc, media: c.media }
     };
   }
 
@@ -145,10 +147,20 @@
     }
   }
 
+  function mediaHTML(props) {
+    var m = props.media;
+    if (!m) return '';
+    var h = '';
+    if (m.photo) h += '<img class="popup-photo" loading="lazy" src="' + m.photo + '" alt="' + (props.name || '') + '">';
+    if (m.video) h += '<video class="popup-video" controls muted preload="none" poster="' + (m.poster || m.photo || '') + '" src="' + m.video + '"></video>';
+    return h;
+  }
+
   function openPopup(props, coords) {
     new maplibregl.Popup({ offset: 16, closeButton: true })
       .setLngLat(coords)
-      .setHTML('<div class="travel-popup"><div class="popup-city">' + props.name + '</div>' +
+      .setHTML('<div class="travel-popup">' + mediaHTML(props) +
+        '<div class="popup-city">' + props.name + '</div>' +
         '<div class="popup-country">' + (props.country || '') + '</div></div>')
       .addTo(map);
   }
@@ -229,7 +241,8 @@
       grouped[country].forEach(function (c) {
         var it = document.createElement('div');
         it.className = 'travel-item';
-        it.innerHTML = '<span class="dot"></span><span class="name">' + c.name + '</span><span class="country">' + c.cc + '</span>';
+        var dot = (c.media && c.media.photo) ? '<img class="list-thumb" loading="lazy" src="' + c.media.photo + '" alt="">' : '<span class="dot"></span>';
+        it.innerHTML = dot + '<span class="name">' + c.name + '</span><span class="country">' + c.cc + '</span>';
         it.addEventListener('click', function () {
           var pt = [Number(c.lon), Number(c.lat)];
           openPopup(c, pt);
