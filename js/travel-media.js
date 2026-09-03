@@ -6,4 +6,7 @@
 //   "Бангкок":   { photo: "photos/bangkok.jpg", video: "videos/bangkok.mp4", poster: "photos/bangkok.jpg" },
 //
 window.TRAVEL_MEDIA = {
+  "Рим": {
+    "photo": "photos/rim.jpg"
+  }
 };
