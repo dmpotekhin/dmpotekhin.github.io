@@ -155,12 +155,19 @@
     return h;
   }
 
+  function resolveMedia(props) {
+    // MapLibre can hand the nested `media` object back as a JSON STRING (or drop
+    // it on some paths), so normalize to a real object, falling back to TRAVEL_MEDIA.
+    var m = (props && (props.media || MEDIA[props.name])) || null;
+    if (typeof m === 'string') {
+      try { m = JSON.parse(m); } catch (e) { m = null; }
+    }
+    return m && (m.photo || m.video) ? m : null;
+  }
+
   function openPopup(props, coords) {
-    // Resolve media by city name as a fallback: on the heart-click path MapLibre
-    // can return feature properties WITHOUT the nested `media` object, so we
-    // re-look it up from window.TRAVEL_MEDIA to guarantee the photo appears.
-    var media = (props && (props.media || MEDIA[props.name])) || null;
-    console.log('[travel-debug] POPUP name=', props && props.name, '| props.media=', JSON.stringify(props && props.media), '| MEDIA[name]=', JSON.stringify(MEDIA[props && props.name]), '| resolved=', media && media.photo);
+    var media = resolveMedia(props);
+    console.log('[travel-debug] POPUP name=', props && props.name, '| resolved=', media && (media.photo || media.video));
     new maplibregl.Popup({ offset: 16, closeButton: true })
       .setLngLat(coords)
       .setHTML('<div class="travel-popup">' + mediaHTML(media, props && props.name) +
