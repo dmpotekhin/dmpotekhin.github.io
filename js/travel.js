@@ -160,6 +160,7 @@
     // can return feature properties WITHOUT the nested `media` object, so we
     // re-look it up from window.TRAVEL_MEDIA to guarantee the photo appears.
     var media = (props && (props.media || MEDIA[props.name])) || null;
+    console.log('[travel-debug] POPUP name=', props && props.name, '| props.media=', JSON.stringify(props && props.media), '| MEDIA[name]=', JSON.stringify(MEDIA[props && props.name]), '| resolved=', media && media.photo);
     new maplibregl.Popup({ offset: 16, closeButton: true })
       .setLngLat(coords)
       .setHTML('<div class="travel-popup">' + mediaHTML(media, props && props.name) +
@@ -217,6 +218,7 @@
       // 2) heart -> the exact city popup for THIS heart
       var heart = map.queryRenderedFeatures(pt, { layers: ['hearts'] });
       if (heart.length) {
+        console.log('[travel-debug] HEART props =', JSON.stringify(heart[0].properties));
         openPopup(heart[0].properties, heart[0].geometry.coordinates);
         return;
       }
