@@ -147,21 +147,24 @@
     }
   }
 
-  function mediaHTML(props) {
-    var m = props.media;
-    if (!m) return '';
+  function mediaHTML(media, name) {
+    if (!media) return '';
     var h = '';
-    if (m.photo) h += '<img class="popup-photo" src="' + m.photo + '" alt="' + (props.name || '') + '">';
-    if (m.video) h += '<video class="popup-video" controls muted preload="none" poster="' + (m.poster || m.photo || '') + '" src="' + m.video + '"></video>';
+    if (media.photo) h += '<img class="popup-photo" src="' + media.photo + '" alt="' + (name || '') + '">';
+    if (media.video) h += '<video class="popup-video" controls muted preload="none" poster="' + (media.poster || media.photo || '') + '" src="' + media.video + '"></video>';
     return h;
   }
 
   function openPopup(props, coords) {
+    // Resolve media by city name as a fallback: on the heart-click path MapLibre
+    // can return feature properties WITHOUT the nested `media` object, so we
+    // re-look it up from window.TRAVEL_MEDIA to guarantee the photo appears.
+    var media = (props && (props.media || MEDIA[props.name])) || null;
     new maplibregl.Popup({ offset: 16, closeButton: true })
       .setLngLat(coords)
-      .setHTML('<div class="travel-popup">' + mediaHTML(props) +
-        '<div class="popup-city">' + props.name + '</div>' +
-        '<div class="popup-country">' + (props.country || '') + '</div></div>')
+      .setHTML('<div class="travel-popup">' + mediaHTML(media, props && props.name) +
+        '<div class="popup-city">' + (props && props.name) + '</div>' +
+        '<div class="popup-country">' + (props && (props.country || '')) + '</div></div>')
       .addTo(map);
   }
 
