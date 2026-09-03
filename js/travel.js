@@ -151,7 +151,7 @@
     var m = props.media;
     if (!m) return '';
     var h = '';
-    if (m.photo) h += '<img class="popup-photo" loading="lazy" src="' + m.photo + '" alt="' + (props.name || '') + '">';
+    if (m.photo) h += '<img class="popup-photo" src="' + m.photo + '" alt="' + (props.name || '') + '">';
     if (m.video) h += '<video class="popup-video" controls muted preload="none" poster="' + (m.poster || m.photo || '') + '" src="' + m.video + '"></video>';
     return h;
   }
@@ -254,7 +254,7 @@
       grouped[country].forEach(function (c) {
         var it = document.createElement('div');
         it.className = 'travel-item';
-        var dot = (c.media && c.media.photo) ? '<img class="list-thumb" loading="lazy" src="' + c.media.photo + '" alt="">' : '<span class="dot"></span>';
+        var dot = (c.media && c.media.photo) ? '<img class="list-thumb" src="' + c.media.photo + '" alt="">' : '<span class="dot"></span>';
         it.innerHTML = dot + '<span class="name">' + c.name + '</span><span class="country">' + c.cc + '</span>';
         it.addEventListener('click', function () {
           var pt = [Number(c.lon), Number(c.lat)];
