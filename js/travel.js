@@ -167,7 +167,6 @@
 
   function openPopup(props, coords) {
     var media = resolveMedia(props);
-    console.log('[travel-debug] POPUP name=', props && props.name, '| resolved=', media && (media.photo || media.video));
     new maplibregl.Popup({ offset: 16, closeButton: true })
       .setLngLat(coords)
       .setHTML('<div class="travel-popup">' + mediaHTML(media, props && props.name) +
@@ -225,7 +224,6 @@
       // 2) heart -> the exact city popup for THIS heart
       var heart = map.queryRenderedFeatures(pt, { layers: ['hearts'] });
       if (heart.length) {
-        console.log('[travel-debug] HEART props =', JSON.stringify(heart[0].properties));
         openPopup(heart[0].properties, heart[0].geometry.coordinates);
         return;
       }
