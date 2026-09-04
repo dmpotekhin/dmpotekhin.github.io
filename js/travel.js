@@ -264,7 +264,7 @@
       grouped[country].forEach(function (c) {
         var it = document.createElement('div');
         it.className = 'travel-item';
-        var dot = (c.media && c.media.photo) ? '<img class="list-thumb" src="' + c.media.photo + '" alt="">' : '<span class="dot"></span>';
+        var dot = (c.media && (c.media.thumb || c.media.photo || c.media.poster)) ? '<img class="list-thumb" loading="lazy" src="' + (c.media.thumb || c.media.photo || c.media.poster) + '" alt="">' : '<span class="dot"></span>';
         it.innerHTML = dot + '<span class="name">' + c.name + '</span><span class="country">' + c.cc + '</span>';
         it.addEventListener('click', function () {
           var pt = [Number(c.lon), Number(c.lat)];

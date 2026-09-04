@@ -7,6 +7,7 @@
 //
 window.TRAVEL_MEDIA = {
   "Рим": {
-    "photo": "photos/rim.jpg"
+    "photo": "photos/rim.jpg",
+    "thumb": "photos/rim_thumb.jpg"
   }
 };
