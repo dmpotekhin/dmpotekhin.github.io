@@ -187,6 +187,11 @@
       attributionControl: false
     });
 
+    // Wheel must scroll the PAGE (the map sits below the globe on a scrollable
+    // page) instead of zooming the map. Zoom stays available via the + / -
+    // NavigationControl, double-click, and touch pinch.
+    map.scrollZoom.disable();
+
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
     map.addControl(new maplibregl.FullscreenControl(), 'top-right');
     map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
@@ -235,6 +240,14 @@
     });
 
     renderSidebar();
+
+    // Small read-only hook so the 3D globe (travel-globe.js) can glide this flat
+    // map to the same city on click. Pure addition; does not change existing logic.
+    window.travelMap = {
+      flyToCity: function (lat, lon) {
+        if (map) map.flyTo({ center: [Number(lon), Number(lat)], zoom: 6.5, duration: 900 });
+      }
+    };
   }
 
   function countByCountry(citiesArr) {

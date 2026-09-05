@@ -6,7 +6,7 @@
     <meta name="description" content="Dmitry Potekhin - Travel Map (visited cities and countries)">
     <title>Travel Map - Dmitry Potekhin</title>
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/travel.css">
+    <link rel="stylesheet" href="css/travel.css?v=20260905a">
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
     <script>
         (function() {
@@ -41,37 +41,63 @@
     </header>
 
     <!-- Main Content -->
-    <main class="travel-layout">
-        <!-- Sidebar -->
-        <aside class="travel-panel">
-            <div class="travel-header">
-                <h2 data-lang-ru="🗺️ Мои путешествия" data-lang-en="🗺️ My Travels">🗺️ Мои путешествия</h2>
-                <div class="travel-stats" id="travel-stats"></div>
-            </div>
-            <div class="travel-controls">
-                <input type="text" id="travel-search" data-placeholder-ru="Поиск: город или страна..." data-placeholder-en="Search: city or country..." placeholder="Поиск: город или страна...">
-            </div>
-            <div class="travel-filters">
-                <label for="filter-countries"><input type="checkbox" id="filter-countries" checked> Страны</label>
-                <label for="filter-cities"><input type="checkbox" id="filter-cities" checked> Города</label>
-            </div>
-            <div class="travel-list" id="travel-list"></div>
-            <div class="travel-legend">
-                <span class="key"><span class="dot" style="background:#e0245e"></span> Посещено</span>
-            </div>
-            <div class="travel-note">
-                <span data-lang-ru="Сердечки — города, где я был. Розовым выделены посещённые страны." data-lang-en="Hearts mark the cities I have visited. Visited countries are highlighted.">Сердечки — города, где я был. Розовым выделены посещённые страны.</span>
-            </div>
-        </aside>
+    <main class="travel-main">
 
-        <!-- Map -->
-        <div id="map"></div>
+        <!-- 3D globe (top) -->
+        <section class="travel-globe-section" id="globe-section">
+            <div id="globe" aria-label="3D globe of visited places"></div>
+            <div class="globe-ui">
+                <div class="globe-title" data-lang-ru="🌍 Мои путешествия в 3D" data-lang-en="🌍 My travels in 3D">🌍 Мои путешествия в 3D</div>
+                <div class="globe-stats"></div>
+            </div>
+            <div class="globe-legend">
+                <span class="key"><span class="g-dot"></span><span data-lang-ru="Города" data-lang-en="Cities">Города</span></span>
+                <span class="key"><span class="g-poly"></span><span data-lang-ru="Посещённые страны" data-lang-en="Visited countries">Посещённые страны</span></span>
+                <span class="g-hint" data-lang-ru="Кликните по точке, чтобы приблизить" data-lang-en="Click a point to zoom in">Кликните по точке, чтобы приблизить</span>
+            </div>
+            <div id="globe-loading">
+                <div class="spinner"></div>
+                <span data-lang-ru="Загрузка глобуса…" data-lang-en="Loading globe…">Загрузка глобуса…</span>
+            </div>
+        </section>
+
+        <!-- Flat map block (below the globe, unchanged) -->
+        <section class="travel-map-section">
+            <div class="travel-layout">
+                <!-- Sidebar -->
+                <aside class="travel-panel">
+                    <div class="travel-header">
+                        <h2 data-lang-ru="🗺️ Мои путешествия" data-lang-en="🗺️ My Travels">🗺️ Мои путешествия</h2>
+                        <div class="travel-stats" id="travel-stats"></div>
+                    </div>
+                    <div class="travel-controls">
+                        <input type="text" id="travel-search" data-placeholder-ru="Поиск: город или страна..." data-placeholder-en="Search: city or country..." placeholder="Поиск: город или страна...">
+                    </div>
+                    <div class="travel-filters">
+                        <label for="filter-countries"><input type="checkbox" id="filter-countries" checked> Страны</label>
+                        <label for="filter-cities"><input type="checkbox" id="filter-cities" checked> Города</label>
+                    </div>
+                    <div class="travel-list" id="travel-list"></div>
+                    <div class="travel-legend">
+                        <span class="key"><span class="dot" style="background:#e0245e"></span> Посещено</span>
+                    </div>
+                    <div class="travel-note">
+                        <span data-lang-ru="Сердечки — города, где я был. Розовым выделены посещённые страны." data-lang-en="Hearts mark the cities I have visited. Visited countries are highlighted.">Сердечки — города, где я был. Розовым выделены посещённые страны.</span>
+                    </div>
+                </aside>
+
+                <!-- Map -->
+                <div id="map"></div>
+            </div>
+        </section>
     </main>
 
     <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+    <script src="https://unpkg.com/globe.gl"></script>
     <script src="js/main.js"></script>
     <script src="js/travel-data.js?v=20260903d"></script>
     <script src="js/travel-media.js?v=20260903d"></script>
-    <script src="js/travel.js?v=20260903d"></script>
+    <script src="js/travel.js?v=20260905b"></script>
+    <script src="js/travel-globe.js?v=20260905c"></script>
 </body>
 </html>
