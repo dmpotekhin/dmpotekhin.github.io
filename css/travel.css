@@ -289,6 +289,24 @@
 .globe-tip b { color: #fff; }
 .globe-tip span { color: #aeb8ff; }
 
+/* Country-flag HTML markers (globe.gl htmlElementsData layer) */
+.globe-flag {
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+    transform-origin: center bottom;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.9)) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
+    transition: transform 0.18s ease, filter 0.18s ease;
+    /* globe.gl positions these elements absolutely; keep them fully interactive */
+    pointer-events: auto;
+}
+.globe-flag:hover {
+    transform: scale(1.28);
+    filter: drop-shadow(0 4px 9px rgba(0, 0, 0, 0.95)) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.85));
+    z-index: 5;
+}
+
 /* list row highlighted when clicked from the globe */
 .travel-item.globe-highlight {
     background: rgba(224, 36, 94, 0.18);

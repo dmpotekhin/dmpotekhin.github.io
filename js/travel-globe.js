@@ -14,7 +14,6 @@
   var NEUTRAL_FILL = 'rgba(255,255,255,0.035)'; // "others": almost transparent / neutral
   var NEUTRAL_EDGE = 'rgba(255,255,255,0.10)';
   var NEUTRAL_SIDE = 'rgba(255,255,255,0.02)';
-  var POINT_COLOR = '#ff4d7d';               // pink, matches the flat-map hearts
   // Textures are vendored locally (assets/) so the globe never depends on a
   // CDN fetch at runtime — a stalled unpkg request is what left a blank screen.
   var DARK_TEX = 'assets/earth-dark.jpg';
@@ -42,16 +41,10 @@
   var w = container.clientWidth || window.innerWidth;
   var h = container.clientHeight || 620;
 
-  // Reuse the SAME city list (no manual duplication). Map to the requested shape.
-  var pointsData = cities.map(function (c) {
-    return {
-      city: c.name,
-      country: c.country,
-      cc: c.cc,
-      lat: Number(c.lat),
-      lng: Number(c.lon)
-    };
-  });
+  // Reuse the SAME city list (no manual duplication). Build HTML flag markers,
+  // collapsing same-country cities that sit close together into ONE flag so
+  // overlapping country flags (e.g. several nearby US cities) don't stack.
+  var flagsData = buildFlagsData(cities);
 
   // Visited country codes (ISO alpha-2) derived from the single data source.
   var visitedCC = {};
@@ -70,18 +63,13 @@
     .width(w)
     .height(h)
 
-    // ---- city points ----
-    .pointsData(pointsData)
-    .pointLat(function (d) { return d.lat; })
-    .pointLng(function (d) { return d.lng; })
-    .pointColor(POINT_COLOR)
-    .pointAltitude(0.02)
-    .pointRadius(0.12)
-    .pointResolution(8)
-    .pointLabel(function (d) {
-      return '<div class="globe-tip"><b>' + esc(d.city) + '</b><br><span>' + esc(d.country) + '</span></div>';
-    })
-    .onPointClick(function (d) { flyToCity(d); })
+    // ---- country-flag layer (HTML) — rendered OVER the polygons ----
+    .htmlElementsData(flagsData)
+    .htmlLat(function (d) { return d.lat; })
+    .htmlLng(function (d) { return d.lng; })
+    .htmlAltitude(0.01)
+    .htmlElement(function (d) { return flagElement(d); })
+    .htmlTransitionDuration(400)
 
     .onGlobeReady(function () {
       // Start over the region with the most places; auto-rotate takes it from here.
@@ -123,8 +111,8 @@
   // ---- click a city: fly the camera, highlight the matching row in the list,
   //      and (if the flat map is live) glide the MapLibre map there too ----
   function flyToCity(d) {
-    globe.pointOfView({ lat: d.lat, lng: d.lng, altitude: 1.75 }, 1100);
-    highlightCity(d);
+    globe.pointOfView({ lat: d.lat, lng: d.lng, altitude: 1.7 }, 1100);
+    if (!d.isCluster) highlightCity(d);
     if (window.travelMap && window.travelMap.flyToCity) {
       window.travelMap.flyToCity(d.lat, d.lng);
     }
@@ -150,6 +138,94 @@
     best.classList.add('globe-highlight');
     setTimeout(function () { best.classList.remove('globe-highlight'); }, 2200);
     best.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // ---- country-flag helpers (HTML layer) ----
+  // Merge threshold (degrees): same-country cities closer than this collapse
+  // into ONE flag so several nearby fills (e.g. US east-coast cities) don't
+  // sit on top of each other. The flag is placed at the cluster centroid.
+  var FLAG_CLUSTER_DEG = 2.0;
+
+  // ISO alpha-2 (e.g. "RU") -> regional-indicator flag emoji (🇷🇺). Each letter
+  // maps to its own regional indicator symbol via 0x1F1E6 (127398) base.
+  function flagEmoji(cc) {
+    if (!cc || cc.length !== 2) return '📍';
+    return String.fromCodePoint(127397 + cc.toUpperCase().charCodeAt(0),
+                                127397 + cc.toUpperCase().charCodeAt(1));
+  }
+
+  // Approx great-circle distance in degrees (delta-lon scaled by cos(lat)).
+  function ccDist(a, b) {
+    var dLat = b.lat - a.lat;
+    var avgLat = (a.lat + b.lat) / 2 * Math.PI / 180;
+    var dLng = (b.lng - a.lng) * Math.cos(avgLat);
+    return Math.sqrt(dLat * dLat + dLng * dLng);
+  }
+
+  // Cluster same-country cities by proximity -> one flag per cluster, plus the
+  // full city list in the tooltip so no city is lost from the data.
+  function buildFlagsData(cities) {
+    var byCC = {};
+    cities.forEach(function (c) {
+      (byCC[c.cc] = byCC[c.cc] || []).push(c);
+    });
+
+    var flags = [];
+    Object.keys(byCC).forEach(function (cc) {
+      var group = byCC[cc];
+      var clusters = [];
+      group.forEach(function (c) {
+        var p = { lat: Number(c.lat), lng: Number(c.lon) };
+        var placed = false;
+        for (var i = 0; i < clusters.length; i++) {
+          if (ccDist(p, clusters[i].rep) < FLAG_CLUSTER_DEG) {
+            clusters[i].cities.push(c);
+            clusters[i].latSum += p.lat;
+            clusters[i].lngSum += p.lng;
+            placed = true;
+            break;
+          }
+        }
+        if (!placed) {
+          clusters.push({ rep: p, cities: [c], latSum: p.lat, lngSum: p.lng });
+        }
+      });
+
+      clusters.forEach(function (cl) {
+        var n = cl.cities.length;
+        var names = cl.cities.map(function (c) { return c.name; });
+        flags.push({
+          cc: cc,
+          country: cl.cities[0].country,
+          city: names[0],
+          cities: names,
+          lat: cl.latSum / n,
+          lng: cl.lngSum / n,
+          isCluster: n > 1,
+          tip: n === 1
+            ? names[0] + ' — ' + cl.cities[0].country
+            : cl.cities[0].country + ': ' + names.join(', ')
+        });
+      });
+    });
+
+    return flags;
+  }
+
+  // Build the clickable DOM marker for each flag cluster.
+  function flagElement(d) {
+    var el = document.createElement('div');
+    el.className = 'globe-flag';
+    el.textContent = flagEmoji(d.cc);
+    el.setAttribute('data-city', d.city);
+    el.title = d.tip; // native tooltip: city + country (kept for accessibility)
+    // globe.gl 2.x has no onHtmlElementClick — bind the fly-to directly on the
+    // marker so clicking a flag glides the camera to that city/cluster.
+    el.addEventListener('click', function (ev) {
+      ev.stopPropagation();
+      flyToCity(d);
+    });
+    return el;
   }
 
   // ---- polygon layers (visited accent over neutral "others") ----
