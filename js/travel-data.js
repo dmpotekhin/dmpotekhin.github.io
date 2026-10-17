@@ -1,4 +1,4 @@
-// Auto-generated: visited cities travel data (255 cities / 50 countries)
+// Auto-generated: visited cities travel data (258 cities / 50 countries)
 // Source: города.xlsx -> Nominatim geocoding. Do not edit by hand; edit города.xlsx then re-run.
 window.TRAVEL_CITIES = [
   {name:"Агинское", country:"Россия", cc:"RU", lat:51.10576, lon:114.54080},
@@ -86,7 +86,9 @@ window.TRAVEL_CITIES = [
   {name:"Итайпу", country:"Бразилия", cc:"BR", lat:-25.41000, lon:-54.58900},
   {name:"Иу", country:"Китай", cc:"CN", lat:29.30930, lon:120.07038},
   {name:"Йокарта", country:"Индонезия", cc:"ID", lat:-7.80135, lon:110.36474},
+  {name:"Йокогама", country:"Япония", cc:"JP", lat:35.45034, lon:139.63438},
   {name:"Йоханесбург", country:"Южная Африка", cc:"ZA", lat:-26.20500, lon:28.04972},
+  {name:"Кавагоэ", country:"Япония", cc:"JP", lat:35.92511, lon:139.48569},
   {name:"Казань", country:"Россия", cc:"RU", lat:55.79465, lon:49.11150},
   {name:"Калама", country:"Чили", cc:"CL", lat:-22.46239, lon:-68.92722},
   {name:"Калибо", country:"Филиппины", cc:"PH", lat:11.70890, lon:122.36402},
@@ -226,6 +228,7 @@ window.TRAVEL_CITIES = [
   {name:"Ха Лонг", country:"Вьетнам", cc:"VN", lat:20.91000, lon:107.18000},
   {name:"Хабаровск", country:"Россия", cc:"RU", lat:48.48126, lon:135.07630},
   {name:"Хайлар", country:"Китай", cc:"CN", lat:49.23214, lon:119.81723},
+  {name:"Хаконэ", country:"Япония", cc:"JP", lat:35.23237, lon:139.10688},
   {name:"Хандань", country:"Китай", cc:"CN", lat:36.61077, lon:114.48571},
   {name:"Ханой", country:"Вьетнам", cc:"VN", lat:21.02833, lon:105.85404},
   {name:"Ханчжоу", country:"Китай", cc:"CN", lat:30.24896, lon:120.20523},

@@ -33,6 +33,10 @@ UA = {"User-Agent": "dmpotekhin-travel-map/1.0 (personal travel data refresh)"}
 # in the data. If the "correct" name matches one we already have, skip it.
 SKIP_TYPOS = {"Хэдань": "Хандань"}   # Хэдань is a mis-typing of Хандань (CN)
 
+# Misspelled names that should be geocoded + stored under the correct spelling
+# (Nominatim returns nothing for the misspelling, so it would be silently dropped).
+TYPO_FIX = {"Иокагама": "Йокогама"}   # Yokohama (JP)
+
 # Fallback: country ISO_A2 -> russian name + fillColor (dominant flag colour
 # chosen to echo existing convention). Derived from Nominatim + NE for the new
 # countries; the rest are inferred from existing data via cc->country mapping.
@@ -161,6 +165,10 @@ def main():
     delta = []
     for nm in xlsx_names:
         nm = nm.strip()
+        fixed = TYPO_FIX.get(nm)
+        if fixed:
+            log("  typo fix:", nm, "->", fixed)
+            nm = fixed
         # skip typo duplicates
         if nm in SKIP_TYPOS and SKIP_TYPOS[nm] in cities:
             log("  skip typo duplicate:", nm, "->", SKIP_TYPOS[nm])
@@ -197,7 +205,7 @@ def main():
     # ---- is no longer present in the xlsx (removals), while keeping the
     # ---- typo-corrected names (SKIP_TYPOS values) that the xlsx references only
     # ---- via the misspelling.
-    xlsx_set = {nm.strip() for nm in xlsx_names}
+    xlsx_set = {TYPO_FIX.get(nm.strip(), nm.strip()) for nm in xlsx_names}
     keep = xlsx_set | set(SKIP_TYPOS.values())
     dropped = sorted(k for k in cities if k not in keep)
     if dropped:
