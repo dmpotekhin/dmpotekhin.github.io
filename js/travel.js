@@ -5,10 +5,7 @@
 
   // CARTO dark basemap: the workspace must belong to the same dark ground as the
   // globe, otherwise the page reads as two different sites stacked.
-  // Variants (travel-alt-*.html) may override base map + accent before this
-  // script loads: window.TRAVEL_BASEMAP / window.TRAVEL_ACCENT.
-  var BASEMAP = window.TRAVEL_BASEMAP || 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
-  var ACCENT = window.TRAVEL_ACCENT || '#b11226';
+  var BASEMAP = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
   var cities = (window.TRAVEL_CITIES || []).slice();
   var MEDIA = (window.TRAVEL_MEDIA || {});
@@ -47,7 +44,7 @@
     ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
     // pink disc
-    ctx.fillStyle = ACCENT;
+    ctx.fillStyle = '#b11226';
     ctx.beginPath(); ctx.arc(cx, cy, R - size * 0.06, 0, Math.PI * 2); ctx.fill();
     // white heart
     ctx.fillStyle = '#ffffff';
@@ -150,7 +147,7 @@
         id: 'visited-border',
         type: 'line',
         source: 'visited',
-        paint: { 'line-color': ACCENT, 'line-width': 1, 'line-opacity': 0.5 }
+        paint: { 'line-color': '#b11226', 'line-width': 1, 'line-opacity': 0.5 }
       });
     }
 
@@ -161,7 +158,7 @@
         source: 'cities',
         filter: ['has', 'point_count'],
         paint: {
-          'circle-color': ACCENT,
+          'circle-color': '#b11226',
           'circle-radius': ['step', ['get', 'point_count'], 16, 25, 21, 60, 26],
           'circle-opacity': 0.9,
           'circle-stroke-width': 1.5,

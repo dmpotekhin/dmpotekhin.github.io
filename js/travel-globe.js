@@ -8,9 +8,9 @@
   'use strict';
 
   // ---- palette (black-crimson / "dark room", matches css/travel.css tokens) ----
-  var ACCENT = window.TRAVEL_GLOBE_ACCENT || 'rgba(177,18,38,0.72)';      // visited-country fill
-  var ACCENT_EDGE = window.TRAVEL_GLOBE_EDGE || 'rgba(212,48,74,0.90)';
-  var ACCENT_SIDE = window.TRAVEL_GLOBE_SIDE || 'rgba(177,18,38,0.26)';
+  var ACCENT = 'rgba(177,18,38,0.72)';      // visited-country fill  (accent #b11226)
+  var ACCENT_EDGE = 'rgba(212,48,74,0.90)';
+  var ACCENT_SIDE = 'rgba(177,18,38,0.26)';
   var NEUTRAL_FILL = 'rgba(255,255,255,0.035)'; // "others": almost transparent / neutral
   var NEUTRAL_EDGE = 'rgba(255,255,255,0.10)';
   var NEUTRAL_SIDE = 'rgba(255,255,255,0.02)';
