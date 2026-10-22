@@ -6,7 +6,10 @@
     <meta name="description" content="Dmitry Potekhin - Travel Map (visited cities and countries)">
     <title>Travel Map - Dmitry Potekhin</title>
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/travel.css?v=20260905a">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/travel.css?v=20261022d">
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
     <script>
         (function() {
@@ -17,7 +20,7 @@
         })();
     </script>
 </head>
-<body>
+<body class="travel-page">
     <!-- Header -->
     <header>
         <nav class="navbar">
@@ -27,14 +30,21 @@
                     <p class="subtitle" data-lang-ru="Карта путешествий" data-lang-en="Travel Map">Карта путешествий</p>
                 </div>
                 <div class="nav-controls">
-                    <button id="theme-toggle" class="btn-icon" aria-label="Toggle theme">
-                        <span class="theme-icon">🌙</span>
+                    <button id="theme-toggle" class="btn-icon" aria-label="Toggle theme" aria-live="polite">
+                        <span class="theme-icon" aria-hidden="true"></span>
+                        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" aria-hidden="true">
+                            <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/>
+                        </svg>
+                        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="4.2"/>
+                            <path d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/>
+                        </svg>
                     </button>
                     <button id="lang-toggle" class="btn-lang" aria-label="Toggle language">
                         <span id="current-lang">EN</span>
                     </button>
-                    <a href="index.html" class="btn-nav" data-lang-ru="👤 Резюме" data-lang-en="👤 Resume">👤 Resume</a>
-                    <a href="books.html" class="btn-nav" data-lang-ru="📚 Книги" data-lang-en="📚 Books">📚 Books</a>
+                    <a href="index.html" class="btn-nav" data-lang-ru="Резюме" data-lang-en="Resume">Резюме</a>
+                    <a href="books.html" class="btn-nav" data-lang-ru="Книги" data-lang-en="Books">Книги</a>
                 </div>
             </div>
         </nav>
@@ -47,7 +57,7 @@
         <section class="travel-globe-section" id="globe-section">
             <div id="globe" aria-label="3D globe of visited places"></div>
             <div class="globe-ui">
-                <div class="globe-title" data-lang-ru="🌍 Мои путешествия в 3D" data-lang-en="🌍 My travels in 3D">🌍 Мои путешествия в 3D</div>
+                <div class="globe-title" data-lang-ru="Посещённые места" data-lang-en="Places visited">Посещённые места</div>
                 <div class="globe-stats"></div>
             </div>
             <div class="globe-legend">
@@ -67,7 +77,7 @@
                 <!-- Sidebar -->
                 <aside class="travel-panel">
                     <div class="travel-header">
-                        <h2 data-lang-ru="🗺️ Мои путешествия" data-lang-en="🗺️ My Travels">🗺️ Мои путешествия</h2>
+                        <h2 data-lang-ru="Атлас" data-lang-en="Atlas">Атлас</h2>
                         <div class="travel-stats" id="travel-stats"></div>
                     </div>
                     <div class="travel-controls">
@@ -79,10 +89,10 @@
                     </div>
                     <div class="travel-list" id="travel-list"></div>
                     <div class="travel-legend">
-                        <span class="key"><span class="dot" style="background:#e0245e"></span> Посещено</span>
+                        <span class="key"><span class="dot" style="background:#b11226"></span> Посещено</span>
                     </div>
                     <div class="travel-note">
-                        <span data-lang-ru="Сердечки — города, где я был. Розовым выделены посещённые страны." data-lang-en="Hearts mark the cities I have visited. Visited countries are highlighted.">Сердечки — города, где я был. Розовым выделены посещённые страны.</span>
+                        <span data-lang-ru="Сердечки — города, где я был. Тёмно-красным выделены посещённые страны." data-lang-en="Hearts mark the cities I have visited. Visited countries are highlighted in crimson.">Сердечки — города, где я был. Тёмно-красным выделены посещённые страны.</span>
                     </div>
                 </aside>
 
@@ -94,10 +104,10 @@
 
     <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
     <script src="https://unpkg.com/globe.gl"></script>
-    <script src="js/main.js"></script>
+    <script src="js/main.js?v=20261022a"></script>
     <script src="js/travel-data.js?v=20260903d"></script>
     <script src="js/travel-media.js?v=20260903d"></script>
-    <script src="js/travel.js?v=20260905b"></script>
-    <script src="js/travel-globe.js?v=20260905e"></script>
+    <script src="js/travel.js?v=20261022e"></script>
+    <script src="js/travel-globe.js?v=20261022b"></script>
 </body>
 </html>

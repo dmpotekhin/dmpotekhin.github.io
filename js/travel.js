@@ -3,7 +3,9 @@
 (function () {
   'use strict';
 
-  var VOYAGER = 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json';
+  // CARTO dark basemap: the workspace must belong to the same dark ground as the
+  // globe, otherwise the page reads as two different sites stacked.
+  var BASEMAP = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
   var cities = (window.TRAVEL_CITIES || []).slice();
   var MEDIA = (window.TRAVEL_MEDIA || {});
@@ -11,6 +13,8 @@
   var countriesGeojson = 'data/visited_countries.geojson';
   var map = null;
   var didFit = false;
+  // FeatureCollection with muted flag colours (see muteFlagColours).
+  var visitedData = null;
 
   // Build a Google-Maps-style heart marker: a pink disc with a white heart,
   // a white ring and a soft drop shadow (painted to canvas -> ImageData).
@@ -40,7 +44,7 @@
     ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
     // pink disc
-    ctx.fillStyle = '#f2325f';
+    ctx.fillStyle = '#b11226';
     ctx.beginPath(); ctx.arc(cx, cy, R - size * 0.06, 0, Math.PI * 2); ctx.fill();
     // white heart
     ctx.fillStyle = '#ffffff';
@@ -56,6 +60,52 @@
       properties: { name: c.name, country: c.country, cc: c.cc, media: c.media }
     };
   }
+
+  // Muted flag colours: gold->brown, green->olive, blue->slate.
+  function muteHex(hex) {
+    var m = /^#?([0-9a-f]{6})$/i.exec(String(hex || '').trim());
+    if (!m) return '#2b2b2b';
+    var n = parseInt(m[1], 16);
+    var r = (n >> 16) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
+    var mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, s = 0, h = 0;
+    if (mx !== mn) {
+      var d = mx - mn;
+      s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
+      if (mx === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+      else if (mx === g) h = ((b - r) / d + 2) / 6;
+      else h = ((r - g) / d + 4) / 6;
+    }
+    s *= 0.34; l = 0.26;
+    function hue(p, q, t) {
+      if (t < 0) t += 1; if (t > 1) t -= 1;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+      return p;
+    }
+    var q2 = l < 0.5 ? l * (1 + s) : l + s - l * s, p2 = 2 * l - q2;
+    var out = [hue(p2, q2, h + 1 / 3), hue(p2, q2, h), hue(p2, q2, h - 1 / 3)]
+      .map(function (v) { return Math.round(Math.max(0, Math.min(1, v)) * 255); });
+    return '#' + out.map(function (v) { return ('0' + v.toString(16)).slice(-2); }).join('');
+  }
+
+  function muteFlagColours(gj) {
+    (gj.features || []).forEach(function (f) {
+      if (f.properties && f.properties.fillColor) {
+        f.properties.fillColor = muteHex(f.properties.fillColor);
+      }
+    });
+    return gj;
+  }
+
+  // Prefetch so the source can be created with muted colours; if it arrives
+  // late, setData() patches the already-created source.
+  fetch(countriesGeojson).then(function (r) { return r.json(); })
+    .then(function (gj) {
+      visitedData = muteFlagColours(gj);
+      if (map && map.getSource('visited')) map.getSource('visited').setData(visitedData);
+    })
+    .catch(function () { /* keep the raw geojson as a fallback */ });
 
   // Runs on every style load (initial + theme swap), so added layers survive setStyle.
   function addLayers() {
@@ -76,7 +126,7 @@
       });
     }
     if (!map.getSource('visited')) {
-      map.addSource('visited', { type: 'geojson', data: countriesGeojson });
+      map.addSource('visited', { type: 'geojson', data: visitedData || countriesGeojson });
     }
 
     if (!map.hasImage('heart')) {
@@ -84,17 +134,20 @@
     }
 
     if (!map.getLayer('visited-fill')) {
+      // Countries keep their flag colour (a product feature: the map reads as a
+      // set of flags), but at 0.15 opacity over the dark basemap - full strength
+      // turned the map into confetti and fought the crimson accent.
       map.addLayer({
         id: 'visited-fill',
         type: 'fill',
         source: 'visited',
-        paint: { 'fill-color': ['get', 'fillColor'], 'fill-opacity': 0.6 }
+        paint: { 'fill-color': ['get', 'fillColor'], 'fill-opacity': 0.9 }
       });
       map.addLayer({
         id: 'visited-border',
         type: 'line',
         source: 'visited',
-        paint: { 'line-color': ['get', 'fillColor'], 'line-width': 1.1, 'line-opacity': 0.9 }
+        paint: { 'line-color': '#b11226', 'line-width': 1, 'line-opacity': 0.5 }
       });
     }
 
@@ -105,11 +158,11 @@
         source: 'cities',
         filter: ['has', 'point_count'],
         paint: {
-          'circle-color': '#f2325f',
+          'circle-color': '#b11226',
           'circle-radius': ['step', ['get', 'point_count'], 16, 25, 21, 60, 26],
-          'circle-opacity': 0.85,
-          'circle-stroke-width': 2.5,
-          'circle-stroke-color': '#ffffff'
+          'circle-opacity': 0.9,
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': 'rgba(239,239,239,0.85)'
         }
       });
       map.addLayer({
@@ -135,7 +188,7 @@
           'text-size': 12,
           'text-font': ['Open Sans Regular']
         },
-        paint: { 'text-color': '#ffffff', 'text-halo-color': '#c2103f', 'text-halo-width': 1.5 }
+        paint: { 'text-color': '#efefef', 'text-halo-color': '#7d0d1b', 'text-halo-width': 1.5 }
       });
     }
 
@@ -181,7 +234,7 @@
 
     map = new maplibregl.Map({
       container: 'map',
-      style: VOYAGER,
+      style: BASEMAP,
       center: [50, 45],
       zoom: 1.4,
       attributionControl: false

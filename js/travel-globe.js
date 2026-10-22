@@ -7,10 +7,10 @@
 (function () {
   'use strict';
 
-  // ---- palette (site accent / hearts pink, from travel.css) ----
-  var ACCENT = 'rgba(224,36,94,0.75)';      // visited-country fill  (site accent #e0245e)
-  var ACCENT_EDGE = 'rgba(244,77,117,0.95)';
-  var ACCENT_SIDE = 'rgba(224,36,94,0.30)';
+  // ---- palette (black-crimson / "dark room", matches css/travel.css tokens) ----
+  var ACCENT = 'rgba(177,18,38,0.72)';      // visited-country fill  (accent #b11226)
+  var ACCENT_EDGE = 'rgba(212,48,74,0.90)';
+  var ACCENT_SIDE = 'rgba(177,18,38,0.26)';
   var NEUTRAL_FILL = 'rgba(255,255,255,0.035)'; // "others": almost transparent / neutral
   var NEUTRAL_EDGE = 'rgba(255,255,255,0.10)';
   var NEUTRAL_SIDE = 'rgba(255,255,255,0.02)';
@@ -57,8 +57,8 @@
     .globeImageUrl(DARK_TEX)
     .bumpImageUrl(BUMP_TEX)
     .showAtmosphere(true)
-    .atmosphereColor('lightblue')
-    .atmosphereAltitude(0.28)
+    .atmosphereColor('rgba(130,130,130,0.18)')
+    .atmosphereAltitude(0.2)
     .backgroundColor('rgba(0,0,0,0)') // transparent -> the section's gradient shows through
     .width(w)
     .height(h)
